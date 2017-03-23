@@ -11,13 +11,7 @@ object KotlinMain {
         val boardId = args[0]
         val trello = Trello(args[1], args[2])
 
-        val lists = trello.getLists(boardId)
-        val cards = trello.getCards(boardId)
-
-        val list_with_card = lists.map { list ->
-            list to cards.filter { it.idList == list.id }.sortedBy(Card::pos)
-        }.sortedBy { (list, _) -> list.pos }
-
+        val list_with_card = trello.getListsWithCard(boardId)
         val result = list_with_card.map { (list, cards) ->
 """
 # ${list.name}
@@ -28,10 +22,19 @@ ${cards.map { "- [${it.name}](${it.url})\n" }.joinToString(separator = "") { it 
 
         println(result)
     }
-
 }
 
 class Trello(val key: String, val token: String) {
+
+    fun getListsWithCard(boardId: String): List<Pair<TList, List<Card>>> {
+        val lists = getLists(boardId)
+        val cards = getCards(boardId)
+
+        return lists.map { list ->
+            list to cards.filter { it.idList == list.id }.sortedBy(Card::pos)
+        }.sortedBy { (list, _) -> list.pos }
+    }
+
     fun getLists(boardId: String): List<TList> {
         val json = get(boardId, "lists", "name,pos")
         return parse(json, TList::class.java)
