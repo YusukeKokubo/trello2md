@@ -3,7 +3,8 @@ data class Card (
     val name: String,
     val idList: String,
     val url: String,
-    val pos: Float
+    val pos: Float,
+    val desc: String
 )
 
 data class TList (

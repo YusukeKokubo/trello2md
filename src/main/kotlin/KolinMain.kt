@@ -16,7 +16,10 @@ object KotlinMain {
 """
 # ${list.name}
 
-${cards.map { "- [${it.name}](${it.url})\n" }.joinToString(separator = "") { it }}
+${cards.map {
+    "- [${it.name}](${it.url})\n" +
+      if (it.desc.isNotEmpty()) "\n  - ${it.desc.replace("\n", "")}\n" else ""
+}.joinToString(separator = "") { it }}
 """
         }.joinToString(separator = "\n") { it }
 
@@ -41,7 +44,7 @@ class Trello(val key: String, val token: String) {
     }
 
     fun getCards(boardId: String): List<Card> {
-        val json = get(boardId, "cards", "name,idList,url,pos")
+        val json = get(boardId, "cards", "name,idList,url,pos,desc")
         return parse(json, Card::class.java)
     }
 
