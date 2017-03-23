@@ -15,9 +15,7 @@ object KotlinMain {
         val cards = trello.getCards(boardId)
 
         val list_with_card = lists.map { list ->
-            val id = list.id
-            val cards = cards.filter { it.idList == id }.sortedBy { it.pos }
-            list to cards
+            list to cards.filter { it.idList == list.id }.sortedBy(Card::pos)
         }.sortedBy { (list, _) -> list.pos }
 
         val result = list_with_card.map { (list, cards) ->
@@ -45,7 +43,7 @@ class Trello(val key: String, val token: String) {
     }
 
     private fun get(boardId: String, path: String, fields: String): String {
-        val url = "https://api.trello.com/1/boards/${boardId}/${path}?fields=${fields}&key=${key}&token=${token}"
+        val url = "https://api.trello.com/1/boards/$boardId/$path?fields=$fields&key=$key&token=$token"
 
         println(url)
 
@@ -60,8 +58,8 @@ class Trello(val key: String, val token: String) {
 
     private fun <T>parse(body: String, type: Type): List<T> {
         val moshi = Moshi.Builder().build()
-        val type: Type = Types.newParameterizedType(List::class.java, type)
-        val adapter: JsonAdapter<List<T>> = moshi.adapter(type)
+        val t = Types.newParameterizedType(List::class.java, type)
+        val adapter: JsonAdapter<List<T>> = moshi.adapter(t)
 
         return adapter.fromJson(body)
     }
