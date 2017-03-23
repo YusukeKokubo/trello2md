@@ -24,7 +24,7 @@ object KotlinMain {
 """
 # ${list.name}
 
-${cards.map { "- ${it.name}\n" }.joinToString(separator = "") { it }}
+${cards.map { "- [${it.name}](${it.url})\n" }.joinToString(separator = "") { it }}
 """
         }.joinToString(separator = "\n") { it }
 
@@ -40,12 +40,14 @@ class Trello(val key: String, val token: String) {
     }
 
     fun getCards(boardId: String): List<Card> {
-        val json = get(boardId, "cards", "name,idList,pos")
+        val json = get(boardId, "cards", "name,idList,url,pos")
         return parse(json, Card::class.java)
     }
 
     private fun get(boardId: String, path: String, fields: String): String {
         val url = "https://api.trello.com/1/boards/${boardId}/${path}?fields=${fields}&key=${key}&token=${token}"
+
+        println(url)
 
         val client = OkHttpClient()
         val request = Request.Builder()
