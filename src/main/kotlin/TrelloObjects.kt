@@ -12,3 +12,42 @@ data class TList (
     val name: String,
     val pos: Float
 )
+
+data class Comment (
+    val id: String,
+    val data: ActionData,
+    val memberCreator: MemberCreator
+)
+
+data class ActionData (
+        val list: ActionDataList,
+        val board: ActionDataBoard,
+        val card: ActionDataCard,
+        val text: String
+)
+
+data class ActionDataList (
+        val name: String,
+        val id: String
+)
+
+data class ActionDataBoard (
+        val shortLink: String,
+        val name: String,
+        val id: String
+)
+
+data class ActionDataCard (
+        val shortLink: String,
+        val idShort: String,
+        val name: String,
+        val id: String
+)
+
+data class MemberCreator (
+        val id: String,
+        val avatarHash: String,
+        val fullName: String,
+        val initials: String,
+        val username: String
+)

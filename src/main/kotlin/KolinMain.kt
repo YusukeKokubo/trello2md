@@ -12,44 +12,56 @@ object KotlinMain {
         val trello = Trello(args[1], args[2])
 
         val list_with_card = trello.getListsWithCard(boardId)
-        val result = list_with_card.map { (list, cards) ->
-"""
-# ${list.name}
+        var result = StringBuilder()
 
-${cards.map {
-    "- [${it.name}](${it.url})\n" +
-      if (it.desc.isNotEmpty()) "\n  - ${it.desc.replace("\n", "")}\n" else ""
-}.joinToString(separator = "") { it }}
-"""
-        }.joinToString(separator = "\n") { it }
+        list_with_card.forEach { (list, cards) ->
+            result.append("\n# ${list.name}\n")
+            cards.forEach { (card, comments) ->
+                result.append("- [${card.name}](${card.url})\n")
+                result.append(if (card.desc.isNotEmpty()) "\n  - ${card.desc.replace("\n", "")}\n" else "")
+                comments.forEach { c ->
+                    result.append("  - ${c.memberCreator.username}: ${c.data.text.replace("\n", "")}\n")
+                }
+            }
+        }
 
-        println(result)
+        println(result.toString())
     }
 }
 
 class Trello(val key: String, val token: String) {
 
-    fun getListsWithCard(boardId: String): List<Pair<TList, List<Card>>> {
-        val lists = getLists(boardId)
-        val cards = getCards(boardId)
+    fun getListsWithCard(boardId: String): List<Pair<TList, List<Pair<Card, List<Comment>>>>> {
+        val lists = getLists(boardId).sortedBy { it.pos }
+        val cards = getCards(boardId).sortedBy { it.pos }
+        val comments = getComments(boardId)
 
         return lists.map { list ->
-            list to cards.filter { it.idList == list.id }.sortedBy(Card::pos)
-        }.sortedBy { (list, _) -> list.pos }
+            val cs = cards.filter { it.idList == list.id }.sortedBy(Card::pos).map { c ->
+                val ccs = comments.filter { it.data.card.id == c.id }
+                c to ccs
+            }
+            list to cs
+        }
     }
 
     fun getLists(boardId: String): List<TList> {
-        val json = get(boardId, "lists", "name,pos")
+        val json = get(boardId, "lists", "fields=name,pos")
         return parse(json, TList::class.java)
     }
 
     fun getCards(boardId: String): List<Card> {
-        val json = get(boardId, "cards", "name,idList,url,pos,desc")
+        val json = get(boardId, "cards", "fields=name,idList,url,pos,desc")
         return parse(json, Card::class.java)
     }
 
+    fun getComments(boardId: String): List<Comment> {
+        val json = get(boardId, "actions", "filter=commentCard&fields=data")
+        return parse(json, Comment::class.java)
+    }
+
     private fun get(boardId: String, path: String, fields: String): String {
-        val url = "https://api.trello.com/1/boards/$boardId/$path?fields=$fields&key=$key&token=$token"
+        val url = "https://api.trello.com/1/boards/$boardId/$path?$fields&key=$key&token=$token"
 
         println(url)
 
