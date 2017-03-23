@@ -19,18 +19,22 @@ object KotlinMain {
             cards.forEach { (card, comments) ->
                 result.append("\n### [:link:](${card.url}) ${card.name}")
                 card.members.forEach { m ->
-                    result.append(" - ${m.username}")
+                    result.append(" ${avatarUrl(m)}")
                 }
                 result.append("\n")
                 result.append(if (card.desc.isNotEmpty()) "\n> ${card.desc.replace("\n", "\n> ")}\n" else "")
                 result.append("\n")
                 comments.forEach { c ->
-                    result.append("- ${c.memberCreator.username}: ${c.data.text.replace("\n", ". ")}\n")
+                    result.append("> ${avatarUrl(c.memberCreator)} ${c.data.text.replace("\n", "\n> ")}\n")
                 }
             }
         }
 
         println(result.toString())
+    }
+
+    private fun avatarUrl(member: MemberCreator): String {
+        return "![${member.username}](https://trello-avatars.s3.amazonaws.com/${member.avatarHash}/30.png)"
     }
 }
 
