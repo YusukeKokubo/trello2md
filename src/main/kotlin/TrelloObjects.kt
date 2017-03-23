@@ -4,7 +4,8 @@ data class Card (
     val idList: String,
     val url: String,
     val pos: Float,
-    val desc: String
+    val desc: String,
+    val members: List<MemberCreator>
 )
 
 data class TList (

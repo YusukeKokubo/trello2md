@@ -17,10 +17,15 @@ object KotlinMain {
         list_with_card.forEach { (list, cards) ->
             result.append("\n## ${list.name}\n")
             cards.forEach { (card, comments) ->
-                result.append("\n### ${card.name} [link](${card.url})\n")
-                result.append(if (card.desc.isNotEmpty()) "\n${card.desc}\n" else "")
+                result.append("\n### [:link:](${card.url}) ${card.name}")
+                card.members.forEach { m ->
+                    result.append(" - ${m.username}")
+                }
+                result.append("\n")
+                result.append(if (card.desc.isNotEmpty()) "\n> ${card.desc.replace("\n", "\n> ")}\n" else "")
+                result.append("\n")
                 comments.forEach { c ->
-                    result.append("- ${c.memberCreator.username}: ${c.data.text}\n")
+                    result.append("- ${c.memberCreator.username}: ${c.data.text.replace("\n", ". ")}\n")
                 }
             }
         }
@@ -51,7 +56,7 @@ class Trello(val key: String, val token: String) {
     }
 
     fun getCards(boardId: String): List<Card> {
-        val json = get(boardId, "cards", "fields=name,idList,url,pos,desc")
+        val json = get(boardId, "cards", "fields=name,idList,url,pos,desc&members=true&member_fields=avatarHash,fullName,initials,username")
         return parse(json, Card::class.java)
     }
 
