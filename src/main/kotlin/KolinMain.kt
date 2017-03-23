@@ -15,12 +15,12 @@ object KotlinMain {
         var result = StringBuilder()
 
         list_with_card.forEach { (list, cards) ->
-            result.append("\n# ${list.name}\n")
+            result.append("\n## ${list.name}\n")
             cards.forEach { (card, comments) ->
-                result.append("- [${card.name}](${card.url})\n")
-                result.append(if (card.desc.isNotEmpty()) "\n  - ${card.desc.replace("\n", "")}\n" else "")
+                result.append("\n### ${card.name} [link](${card.url})\n")
+                result.append(if (card.desc.isNotEmpty()) "\n${card.desc}\n" else "")
                 comments.forEach { c ->
-                    result.append("  - ${c.memberCreator.username}: ${c.data.text.replace("\n", "")}\n")
+                    result.append("- ${c.memberCreator.username}: ${c.data.text}\n")
                 }
             }
         }
