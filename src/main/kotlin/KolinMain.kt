@@ -43,7 +43,7 @@ class Trello(val key: String, val token: String) {
     fun getListsWithCard(boardId: String): List<Pair<TList, List<Pair<Card, List<Comment>>>>> {
         val lists = getLists(boardId).sortedBy { it.pos }
         val cards = getCards(boardId).sortedBy { it.pos }
-        val comments = getComments(boardId)
+        val comments = getComments(boardId).sortedBy { it.data.date }.reversed()
 
         return lists.map { list ->
             val cs = cards.filter { it.idList == list.id }.sortedBy(Card::pos).map { c ->
