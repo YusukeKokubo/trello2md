@@ -24,7 +24,8 @@ data class ActionData (
         val list: ActionDataList,
         val board: ActionDataBoard,
         val card: ActionDataCard,
-        val text: String
+        val text: String,
+        val date: String
 )
 
 data class ActionDataList (

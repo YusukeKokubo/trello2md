@@ -65,7 +65,7 @@ class Trello(val key: String, val token: String) {
     }
 
     fun getComments(boardId: String): List<Comment> {
-        val json = get(boardId, "actions", "filter=commentCard&fields=data")
+        val json = get(boardId, "actions", "filter=commentCard&fields=data,date")
         return parse(json, Comment::class.java)
     }
 
