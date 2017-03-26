@@ -10,11 +10,17 @@ object KotlinMain {
     fun main(args: Array<String>) {
         val boardId = args[0]
         val trello = Trello(args[1], args[2])
-
+        val list_filter =
+                if (args.size > 3 && args[3].isNotEmpty())
+                    Regex(args[3].split(",").joinToString(separator = "|"))
+                else
+                    Regex(".*")
         val list_with_card = trello.getListsWithCard(boardId)
         var result = StringBuilder()
 
-        list_with_card.forEach { (list, cards) ->
+        list_with_card.filter { (list, cards) ->
+            list.name.matches(list_filter)
+        }.forEach { (list, cards) ->
             result.append("\n## ${list.name}\n")
             cards.forEach { (card, comments) ->
                 result.append("\n### [:link:](${card.url}) ${card.name}")

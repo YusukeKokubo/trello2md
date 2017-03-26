@@ -38,6 +38,9 @@ run {
     }
     args trelloKey
     args trelloToken
+    if (project.hasProperty("list")) {
+        args project.list
+    }
 }
 sourceSets {
     main.java.srcDirs += 'src/main/kotlin'
