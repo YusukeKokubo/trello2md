@@ -12,7 +12,7 @@ object KotlinMain {
         val trello = Trello(args[1], args[2])
         val list_filter =
                 if (args.size > 3 && args[3].isNotEmpty())
-                    Regex(args[3].split(",").joinToString(separator = "|"))
+                    Regex(args[3])
                 else
                     Regex(".*")
         val list_with_card = trello.getListsWithCard(boardId)
