@@ -16,31 +16,49 @@ object KotlinMain {
                 else
                     Regex(".*")
         val list_with_card = trello.getListsWithCard(boardId)
-        var result = StringBuilder()
+        val md = Markdown()
 
-        list_with_card.filter { (list, cards) ->
+        list_with_card.filter { (list, _) ->
             list.name.matches(list_filter)
         }.forEach { (list, cards) ->
-            result.append("\n## ${list.name}\n")
+            md.h2(list.name)
             cards.forEach { (card, comments) ->
-                result.append("\n### [:link:](${card.url}) ${card.name}")
-                card.members.forEach { m ->
-                    result.append(" ${avatarUrl(m)}")
-                }
-                result.append("\n")
-                result.append(if (card.desc.isNotEmpty()) "\n> ${card.desc.replace("\n", "\n> ")}\n" else "")
-                result.append("\n")
+                val card_members = card.members.map { "${avatarUrl(it)}" }.joinToString("")
+                md.h3("[:link:](${card.url}) ${card.name} $card_members")
+                md.quote(card.desc)
                 comments.forEach { c ->
-                    result.append("> ${avatarUrl(c.memberCreator)} ${c.data.text.replace("\n", "\n> ")}\n")
+                    md.quote(avatarUrl((c.memberCreator)))
+                    md.quote(c.data.text)
                 }
             }
         }
 
-        println(result.toString())
+        println(md.toString())
     }
 
     private fun avatarUrl(member: MemberCreator): String {
         return "![${member.username}](https://trello-avatars.s3.amazonaws.com/${member.avatarHash}/30.png)"
+    }
+}
+
+class Markdown {
+    val body: MutableList<String> = ArrayList()
+
+    fun h2(text: String) {
+        body.add("## $text")
+    }
+
+    fun h3(text: String) {
+        body.add("### $text")
+    }
+
+    fun quote(text: String) {
+        val s = text.replace("\n", "\n> ")
+        body.add("> $s")
+    }
+
+    override fun toString(): String {
+        return body.joinToString(separator = "\n\n", prefix = "\n", postfix = "\n")
     }
 }
 
