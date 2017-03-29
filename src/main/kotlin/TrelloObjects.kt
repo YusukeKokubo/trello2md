@@ -17,6 +17,7 @@ data class TList (
 data class Comment (
     val id: String,
     val data: ActionData,
+    val date: String,
     val memberCreator: MemberCreator
 )
 
@@ -24,8 +25,7 @@ data class ActionData (
         val list: ActionDataList,
         val board: ActionDataBoard,
         val card: ActionDataCard,
-        val text: String,
-        val date: String
+        val text: String
 )
 
 data class ActionDataList (
