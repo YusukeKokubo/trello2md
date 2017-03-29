@@ -27,6 +27,7 @@ object KotlinMain {
                 md.h3("[:link:](${card.url}) ${card.name} $card_members")
                 md.quote(card.desc)
                 comments.forEach { c ->
+                    md.quote("----")
                     md.quote(avatarUrl((c.memberCreator)))
                     md.quote(c.data.text)
                 }
