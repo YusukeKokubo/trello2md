@@ -9,7 +9,7 @@ object KotlinMain {
     @JvmStatic
     fun main(args: Array<String>) {
         val boardId = args[0]
-        val trello = Trello(args[1], args[2])
+        val trello = Trello(key = args[1], token = args[2])
         val list_filter =
                 if (args.size > 3 && args[3].isNotEmpty())
                     Regex(args[3])
@@ -17,14 +17,15 @@ object KotlinMain {
                     Regex(".*")
         val list_with_card = trello.getListsWithCard(boardId)
         val md = Markdown()
+        val hl = 1 // header level
 
         list_with_card.filter { (list, _) ->
             list.name.matches(list_filter)
         }.forEach { (list, cards) ->
-            md.h2(list.name)
+            md.h(hl, list.name)
             cards.forEach { (card, comments) ->
                 val card_members = card.members.map { "${avatarUrl(it)}" }.joinToString("")
-                md.h3("[:link:](${card.url}) ${card.name} $card_members")
+                md.h(hl + 1, "[:link:](${card.url}) ${card.name} $card_members")
                 md.quote(card.desc)
                 comments.forEach { (id, data, date, memberCreator) ->
                     md.quote("----")
@@ -45,12 +46,26 @@ object KotlinMain {
 class Markdown {
     val body: MutableList<String> = ArrayList()
 
+    fun h(header_level: Int,text: String) {
+        var ns = StringBuffer()
+        for (i in 0 .. header_level) ns.append("#")
+        body.add("$ns $text")
+    }
+
+    fun h1(text: String) {
+        body.add("# $text")
+    }
+
     fun h2(text: String) {
         body.add("## $text")
     }
 
     fun h3(text: String) {
         body.add("### $text")
+    }
+
+    fun h4(text: String) {
+        body.add("#### $text")
     }
 
     fun quote(text: String) {
