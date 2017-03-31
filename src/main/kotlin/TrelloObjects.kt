@@ -25,7 +25,16 @@ data class ActionData (
         val list: ActionDataList,
         val board: ActionDataBoard,
         val card: ActionDataCard,
-        val text: String
+        val text: String?,
+        val attachment: TAttachment?
+)
+
+data class TAttachment (
+        val url: String,
+        val name: String,
+        val id: String,
+        val previewUrl: String,
+        val previewUrl2x: String
 )
 
 data class ActionDataList (

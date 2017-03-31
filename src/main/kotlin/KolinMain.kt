@@ -23,7 +23,11 @@ object KotlinMain {
                 comments.forEach { (id, data, date, memberCreator) ->
                     md.quote("----")
                     md.quote("${avatarUrl((memberCreator))}")
-                    md.quote(data.text)
+                    if (data.text != null) {
+                        md.quote(data.text)
+                    } else if (data.attachment != null) {
+                        md.quote("![${data.attachment.name}](${data.attachment.url})")
+                    }
                 }
             }
         }

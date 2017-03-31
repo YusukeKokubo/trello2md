@@ -36,4 +36,40 @@ class TrelloTest {
 
         server.shutdown()
     }
+
+    @Test
+    fun getAttachments() {
+        val trello = Trello("", "")
+        val server = MockWebServer()
+        trello.baseUrl = server.url("/").toString()
+
+        val json = """
+[
+  {
+   "id":"0",
+   "data":{
+     "board":{"shortLink":"link","name":"example","id":"1"},
+     "list":{"name":"Hoge","id":"2"},
+     "card":{"shortLink":"cardToLink","idShort":3,"name":"晴天なり","id":"3"},
+     "attachment":{
+       "url":"url",
+       "name":"hoge",
+       "id":"4",
+       "previewUrl":"previewUrl",
+       "previewUrl2x":"previewUrl2"
+     }
+   },
+   "date":"2017-03-31T13:55:48.139Z",
+   "memberCreator":{"id":"5","avatarHash":"avatarHash","fullName":"Yusuke Kokubo","initials":"YK","username":"ykokubo"}}]
+"""
+
+        server.enqueue(MockResponse().setBody(json))
+
+        val comments = trello.getComments("")
+
+        assertThat(comments.size).isEqualTo(1)
+        assertThat(comments[0].data.attachment!!.url).isEqualTo("url")
+
+        server.shutdown()
+    }
 }
