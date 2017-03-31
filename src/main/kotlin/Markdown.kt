@@ -3,7 +3,7 @@ class Markdown {
 
     fun h(header_level: Int,text: String) {
         var ns = StringBuffer()
-        for (i in 0 .. header_level) ns.append("#")
+        for (i in 1 .. header_level) ns.append("#")
         body.add("$ns $text")
     }
 
