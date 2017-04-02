@@ -60,8 +60,10 @@ data class ActionDataCard (
 
 data class MemberCreator (
         val id: String,
-        val avatarHash: String,
+        val avatarHash: AvatarUrl,
         val fullName: String,
         val initials: String,
         val username: String
 )
+
+data class AvatarUrl (val url: String)

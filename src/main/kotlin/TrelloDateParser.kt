@@ -6,16 +6,6 @@ import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 
 class TrelloDateParser: JsonAdapter<ZonedDateTime>() {
-    companion object {
-        val FACTORY: Factory = Factory { type, _, _ ->
-            if (type == ZonedDateTime::class.java) {
-                TrelloDateParser()
-            } else {
-                null
-            }
-        }
-    }
-
     override fun fromJson(reader: JsonReader): ZonedDateTime {
         // "date":"2017-03-29T07:46:13.073Z",
         val f = DateTimeFormatter.ISO_INSTANT.withZone(ZoneId.systemDefault())

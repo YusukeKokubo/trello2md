@@ -44,6 +44,6 @@ object KotlinMain {
     }
 
     private fun avatarUrl(member: MemberCreator): String {
-        return "![${member.username}](https://trello-avatars.s3.amazonaws.com/${member.avatarHash}/30.png)"
+        return "![${member.username}](${member.avatarHash.url})"
     }
 }

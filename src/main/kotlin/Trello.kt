@@ -4,6 +4,7 @@ import com.squareup.moshi.Types
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import java.lang.reflect.Type
+import java.time.ZonedDateTime
 
 class Trello(val key: String, val token: String) {
 
@@ -54,7 +55,15 @@ class Trello(val key: String, val token: String) {
 
     private fun <T>parse(body: String, type: Type): List<T> {
         val moshi = Moshi.Builder()
-                .add(TrelloDateParser.FACTORY)
+                .add({ type, _, _ ->
+                    if (type == ZonedDateTime::class.java) {
+                        TrelloDateParser()
+                    } else if (type == AvatarUrl::class.java) {
+                        TrelloAvatarParser()
+                    } else {
+                        null
+                    }
+                })
                 .build()
         val t = Types.newParameterizedType(List::class.java, type)
         val adapter: JsonAdapter<List<T>> = moshi.adapter(t)
