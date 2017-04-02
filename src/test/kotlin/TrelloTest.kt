@@ -32,7 +32,12 @@ class TrelloTest {
         assertThat(comments.size).isEqualTo(1)
         assertThat(comments[0].id).isEqualTo("1000")
         assertThat(comments[0].data.text).isEqualTo("hoge hoge fuga fuga")
-        assertThat(comments[0].date).isEqualTo("2017-03-29T07:46:13.073Z")
+        assertThat(comments[0].date.year).isEqualTo(2017)
+        assertThat(comments[0].date.monthValue).isEqualTo(3)
+        assertThat(comments[0].date.dayOfMonth).isEqualTo(29)
+        assertThat(comments[0].date.hour).isEqualTo(7)
+        assertThat(comments[0].date.minute).isEqualTo(46)
+        assertThat(comments[0].date.second).isEqualTo(13)
 
         server.shutdown()
     }

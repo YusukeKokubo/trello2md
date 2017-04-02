@@ -53,7 +53,9 @@ class Trello(val key: String, val token: String) {
     }
 
     private fun <T>parse(body: String, type: Type): List<T> {
-        val moshi = Moshi.Builder().build()
+        val moshi = Moshi.Builder()
+                .add(TrelloDateParser.FACTORY)
+                .build()
         val t = Types.newParameterizedType(List::class.java, type)
         val adapter: JsonAdapter<List<T>> = moshi.adapter(t)
 
