@@ -2,6 +2,7 @@ import okhttp3.mockwebserver.MockResponse
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import okhttp3.mockwebserver.MockWebServer
+import trello.Trello
 
 class TrelloTest {
     @Test
