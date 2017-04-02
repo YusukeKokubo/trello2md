@@ -1,11 +1,5 @@
-import java.time.LocalDateTime
-import java.time.ZoneId
-import java.time.ZoneOffset
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
-import java.time.format.FormatStyle
-import java.time.temporal.ChronoUnit
-import java.util.*
 
 object KotlinMain {
     @JvmStatic
@@ -44,10 +38,9 @@ object KotlinMain {
         println(md.toString())
     }
 
-    private fun showDate(date: LocalDateTime): String {
-        val d = date.plusHours(9) // FIXME どうやったらデフォルトのoffsetを柔軟に設定できるの…
+    private fun showDate(date: ZonedDateTime): String {
         val p = DateTimeFormatter.ofPattern("yyyy/MM/dd (E) HH:mm:ss")
-        return d.atZone(ZoneId.systemDefault()).format(p)
+        return date.format(p)
     }
 
     private fun avatarUrl(member: MemberCreator): String {

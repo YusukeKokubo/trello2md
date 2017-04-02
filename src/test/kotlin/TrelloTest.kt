@@ -35,7 +35,7 @@ class TrelloTest {
         assertThat(comments[0].date.year).isEqualTo(2017)
         assertThat(comments[0].date.monthValue).isEqualTo(3)
         assertThat(comments[0].date.dayOfMonth).isEqualTo(29)
-        assertThat(comments[0].date.hour).isEqualTo(7)
+        assertThat(comments[0].date.hour).isEqualTo(16) // +09:00
         assertThat(comments[0].date.minute).isEqualTo(46)
         assertThat(comments[0].date.second).isEqualTo(13)
 

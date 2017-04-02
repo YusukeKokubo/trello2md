@@ -1,4 +1,5 @@
 import java.time.LocalDateTime
+import java.time.ZonedDateTime
 
 data class Card (
     val id: String,
@@ -17,10 +18,10 @@ data class TList (
 )
 
 data class Comment (
-    val id: String,
-    val data: ActionData,
-    val date: LocalDateTime,
-    val memberCreator: MemberCreator
+        val id: String,
+        val data: ActionData,
+        val date: ZonedDateTime,
+        val memberCreator: MemberCreator
 )
 
 data class ActionData (
