@@ -23,6 +23,17 @@ class TrelloTest {
    },
    "date":"2017-03-29T07:46:13.073Z",
    "memberCreator":{"id":"5000","avatarHash":"hashToAvatar","fullName":"fullName","initials":"YK","username":"yusuke kokubo"}
+  },
+  {
+   "id":"5000",
+   "data": {
+       "list":{"name":"aList","id":"6000"},
+       "board":{"shortLink":"linkToBoard","name":"nameOfBoard","id":"7000"},
+       "card":{"shortLink":"linkToCard","idShort":5,"name":"nameOfCard","id":"8000"},
+       "text":"Goodbye, world!"
+   },
+   "date":"2017-04-05T06:07:08.009Z",
+   "memberCreator":null
   }
 ]
 """
@@ -30,7 +41,7 @@ class TrelloTest {
 
         val comments = trello.getComments("")
 
-        assertThat(comments.size).isEqualTo(1)
+        assertThat(comments.size).isEqualTo(2)
         assertThat(comments[0].id).isEqualTo("1000")
         assertThat(comments[0].data.text).isEqualTo("hoge hoge fuga fuga")
         assertThat(comments[0].date.year).isEqualTo(2017)
@@ -39,6 +50,8 @@ class TrelloTest {
         assertThat(comments[0].date.hour).isEqualTo(16) // +09:00
         assertThat(comments[0].date.minute).isEqualTo(46)
         assertThat(comments[0].date.second).isEqualTo(13)
+
+        assertThat(comments[1].memberCreator).isEqualTo(null)
 
         server.shutdown()
     }
