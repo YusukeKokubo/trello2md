@@ -46,6 +46,6 @@ object KotlinMain {
     }
 
     private fun avatarUrl(member: MemberCreator): String {
-        return "![${member.username}](${member.avatarHash.url})"
+        return member?.let { "![${it.username}](${it.avatarHash.url})" } ?: ""
     }
 }
